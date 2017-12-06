@@ -3,7 +3,7 @@
  
 LedControl lc=LedControl(12,11,10,1);
 
-unsigned long delaytime=100;
+unsigned long delaytime=10;
 
 void setup() {
   /*
@@ -17,6 +17,24 @@ void setup() {
   lc.clearDisplay(0);
 }
 
+void tick(){
+  delay(delaytime);
+}
+
+bool blinkGoal(bool b){
+    if(b){
+      lc.setLed(0,7, 3, true); }//end on
+    else{
+      lc.setLed(0,7, 3, false); }//end off 
+      
+     b = !b;   
+     return b;   
+}
+
+void updatePC(int playerX, int playerY){
+
+  //not yet implemented
+}
 
 //Displays maze, then loops to blink player and end point
 void writeArduinoMaze()
@@ -32,25 +50,27 @@ void writeArduinoMaze()
   lc.setRow(0,6,level1[6]);
   lc.setRow(0,7,level1[7]);
  
-  bool blink = true;
+  bool PCState, goalState = true;
   int playerX, playerY = 0; //not yet implemented
+  int count = 0;
   
   while(true)
   {
-    if(blink)
-    {
-      lc.setLed(0,0, 0, true); //player on
-      lc.setLed(0,7, 3, true); //end on
-    }
-    else{
-      lc.setLed(0,0, 0, false); //player off
-      lc.setLed(0,7, 3, false); //end off
-    }
+    tick();
+    count = (count+1) % 60;
+
+    if(count % 30 == 0){
+      //not implemented yet, blink player;
+      }
    
-    delay(delaytime);
-   }
-      
+    if(count % 15 == 0 ){
+      goalState = blinkGoal(goalState); }
+
+    if(count % 60 == 0) {
+      updatePC(playerX, playerY);
+    }
   
+   }
 }
 
 void loop() { 
