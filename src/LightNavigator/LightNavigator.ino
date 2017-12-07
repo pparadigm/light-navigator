@@ -51,7 +51,7 @@ void loop() {
     delay(TICK/4);
   
     // blink player character
-    if (count % 2 == 0) {
+    if (count % 2) {
       pipState = !pipState;
       lc.setLed(0, pX, pY, pipState);
     }
@@ -59,6 +59,11 @@ void loop() {
     // blink goal
     goalState = !goalState;
     lc.setLed(0, goal[0], goal[1], goalState);
+
+    // see if player moved and react
+    if (count % 4) {
+      // not implemented
+    }
     
     count = (count + 1) % 60; // 60 is arbitrary, with lots of factors
   }
