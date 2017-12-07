@@ -1,6 +1,7 @@
 #include "LedControlMS.h"
 
 LedControl lc=LedControl(12,11,10,1);
+const double TICK = 1000; // TICK is a number that the Arduino takes ~1 second to count up to
 
 // levels
 const int floor1[8][8] = {{0,1,0,0,0,1,0,0},
@@ -16,8 +17,8 @@ const int NUM_LEVELS = 1;
 typedef const int (*mapsPtr)[8];
 mapsPtr maps[NUM_LEVELS] = {floor1};
 
-int curLevel = 0;
-bool changeLevel;
+int curLevel = 0, start[2] = {}, goal[2] = {}, pX, pY, count;
+bool changeLevel, pipState, goalState;
 
 void setup() {
   // wake up Arduino
@@ -28,12 +29,38 @@ void setup() {
   lc.clearDisplay(0);
 
   changeLevel = true;
+  
 }
 
 void loop() {
-  if(changeLevel) {
-    curLevel += 1;
-    displayMap();
+  while(true) {
+    // load map
+    if(changeLevel) {
+      curLevel += 1;
+      displayMap();
+  
+      // set initial level values
+      start[0] = 0, start[1] = 0; // y, x
+      goal[0] = 3, goal[1] = 7;   // y, x
+      pX = start[1];
+      pY = start[0];
+      changeLevel = false;
+      count = 0;
+      pipState = false, goalState = false;
+    }
+    delay(TICK/4);
+  
+    // blink player character
+    if (count % 2 == 0) {
+      pipState = !pipState;
+      lc.setLed(0, pX, pY, pipState);
+    }
+
+    // blink goal
+    goalState = !goalState;
+    lc.setLed(0, goal[0], goal[1], goalState);
+    
+    count = (count + 1) % 60; // 60 is arbitrary, with lots of factors
   }
 }
 
