@@ -5,9 +5,9 @@ Using an 8x8 LED display (MAX 7219) and a 5-position switch sensor (basically a 
 
 * get the 8x8 display working [done]
 * create a level [done]
-* be able to move the PC in the level
-* (optional) use input from joystick
-* failure states
+* be able to move the PC in the level [done]
+* use input from joystick [done]
+* failure states [done]
 * win screen
 * more levels
 
