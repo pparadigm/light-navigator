@@ -148,7 +148,7 @@ void displayMap(int level) {
 // return:  N, W, S, E, or C
 char getDirectionString() {
   char dir;
-  char input[] = "SSSSSSSWWWWNNNNNNNEEESSS";
+  char input[] = "SSSSSSSEEEENNNNNNNEEESSS";
   static int pos = 0;
   //static int c = 0;
   if (pos < sizeof(input)) {
