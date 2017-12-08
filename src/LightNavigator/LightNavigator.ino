@@ -42,12 +42,12 @@ const int floor1[8][8] = {{0,1,0,0,0,1,0,0},
                           {0,1,0,1,0,1,0,1},
                           {0,1,0,0,0,0,0,1}};
 
-const int NUM_LEVELS = 3;
+const int NUM_LEVELS = 4;
 typedef const int (*mapsPtr)[8];
-mapsPtr maps[NUM_LEVELS] = {floorOff, floorOn, floorRoom/*, floor1*/};
+mapsPtr maps[NUM_LEVELS] = {floorOff, floorOn, floorRoom, floor1};
 
-int startLevel = 1, curLevel, start[2] = {}, goal[2] = {}, pX, pY, count;
-bool changeLevel, pipState, goalState, collisionOn = false;
+int startLevel = 3, curLevel, start[2] = {}, goal[2] = {}, pX, pY, count;
+bool changeLevel, pipState, goalState, collisionOn = true;
 char go;
 
 void setup() {
@@ -91,7 +91,7 @@ void loop() {
     delay(TICK/4);
   
     // blink player character
-    if (count % 2) {
+    if (count % 2 == 0) {
       pipState = !pipState;
       lc.setLed(0, pY, pX, pipState);
     }
@@ -101,8 +101,8 @@ void loop() {
     lc.setLed(0, goal[0], goal[1], goalState);
 
     // see if player moved and react
-    if (count % 4) {
-      go = getDirectionString();
+    if (count % 5 == 0) {
+      go = getSwitchDirection();
       if (go != 'C') {
         placePip(pY, pX, go);
         
@@ -169,7 +169,7 @@ char getDirectionString() {
 // return:  none
 void placePip(int &y, int &x, char dir) {
   // turn off current location
-  lc.setLed(curLevel, y, x, maps[curLevel][y][x]);
+  lc.setLed(0, y, x, maps[curLevel][y][x]);
   
   // pick new location
   switch(dir) {
@@ -230,28 +230,16 @@ char pipDirection;
     value9 = digitalRead(9); 
 
     
-    if(value6 == HIGH){
-      lc.setLed(0, 0, 0, true);}
-    else{
-      lc.setLed(0, 0, 0, false);}
-      
-    if(value7 == HIGH){
-      lc.setLed(0, 0, 7, true);}
-    else{
-      lc.setLed(0, 0, 7, false);}
-      
-    if(value8 == HIGH){
-      lc.setLed(0, 7, 0, true);}
-    else{
-      lc.setLed(0, 7, 0, false);}
-      
-    if(value9 == HIGH){
-      lc.setLed(0, 7, 7, true);}
-    else{
-      lc.setLed(0, 7, 7, false);}
-
+    if(value6 == LOW){
+      pipDirection = 'N';}
+    else if(value7 == LOW){
+  pipDirection = 'W';}
+    else if(value8 == LOW){
+  pipDirection = 'E';}
+    else if(value9 == LOW){
+  pipDirection = 'S';}
+    else
+  pipDirection = 'C';
       return pipDirection;
 }
-
-
 
