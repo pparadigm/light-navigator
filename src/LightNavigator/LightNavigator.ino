@@ -27,7 +27,7 @@ const int NUM_LEVELS = 2;
 typedef const int (*mapsPtr)[8];
 mapsPtr maps[NUM_LEVELS] = {floor0, floor1};
 
-int curLevel = 0, start[2] = {}, goal[2] = {}, pX, pY, count;
+int startLevel = 1, curLevel, start[2] = {}, goal[2] = {}, pX, pY, count;
 bool changeLevel, pipState, goalState;
 char go;
 
@@ -40,15 +40,14 @@ void setup() {
   lc.clearDisplay(0);
 
   changeLevel = true;
-  // curLevel = -1;
+  curLevel = startLevel;
 }
 
 void loop() {
   while(true) {
     // load map
     if(changeLevel) {
-      curLevel += 1;
-      displayMap();
+      displayMap(curLevel);
   
       // set initial level values
       // eventually these positions could be random from a list, and would depend on the map
@@ -77,6 +76,10 @@ void loop() {
       go = getDirection();
       if (go != 'C') {
         placePip(pX, pY, go);
+        // if pip is at the goal
+        if (pX == goal[1] && pY == goal[0]) {
+          winAnim(pX, pY);
+        }
       }
     }
     
@@ -87,12 +90,12 @@ void loop() {
 // purpose: display an 8x8 map
 // pre:     none
 // post:    map is displayed on 8x8 LED array
-// param:   curLevel - the index of the map to display
+// param:   level - the index of the map to display
 // return:  none
-void displayMap() {
+void displayMap(int level) {
   for(int y = 0; y < 8; y++) {
     for(int x = 0; x < 8; x++) {
-      bool state = maps[curLevel][y][x]; // probably curLevel should be passed in?
+      bool state = maps[level][y][x];
       lc.setLed(0, y, x, state);
     }
   }
@@ -119,5 +122,16 @@ char getDirection() {
 void placePip(int &x, int &y, char dir) {
   // STUB
   // using dir, change x or y
+}
+
+// purpose: display an animation centered on the pip
+// pre:     none
+// post:    none
+// param:   x - x-coordinate of animation epicenter
+//          y - y-coordinate of animation epicenter
+// return:  none
+void winAnim(int x, int y) {
+  // STUB
+  // show win animation
 }
 
