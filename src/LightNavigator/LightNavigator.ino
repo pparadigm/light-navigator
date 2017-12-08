@@ -85,7 +85,7 @@ void loop() {
     // blink player character
     if (count % 2) {
       pipState = !pipState;
-      lc.setLed(0, pX, pY, pipState);
+      lc.setLed(0, pY, pX, pipState);
     }
 
     // blink goal
@@ -94,13 +94,13 @@ void loop() {
 
     // see if player moved and react
     if (count % 4) {
-      go = getDirection();
+      go = getDirectionString();
       if (go != 'C') {
-        placePip(pX, pY, go);
+        placePip(pY, pX, go);
         
         // if pip is at the goal, win
         if (pX == goal[1] && pY == goal[0]) {
-          winAnim(pX, pY);
+          winAnim(pY, pX);
           curLevel++;
           changeLevel = true;
         }
@@ -138,20 +138,16 @@ void displayMap(int level) {
 // post:    none
 // param:   none
 // return:  N, W, S, E, or C
-char getDirection() {
+char getDirectionString() {
   char dir;
-  char input[] = "S";
+  char input[] = "SSSSSSSWWWWNNNNNNNEEESSS";
   static int pos = 0;
   //static int c = 0;
   if (pos < sizeof(input)) {
     dir = input[pos];
-  //  pos++;
-//  } else {
-//    dir = 'C';
-//    count++;
-//    if (count == 10) {
-//      pos = 0;
-//    }
+    pos++;
+  } else {
+    dir = 'C';
   }
   return dir;
 }
@@ -163,9 +159,9 @@ char getDirection() {
 //          y - y-coordinate of pip
 //          dir - a char that directs the movement of a pip
 // return:  none
-void placePip(int &x, int &y, char dir) {
+void placePip(int &y, int &x, char dir) {
   // turn off current location
-  lc.setLed(curLevel, x, y, maps[curLevel][x][y]);
+  lc.setLed(curLevel, y, x, maps[curLevel][y][x]);
   
   // pick new location
   switch(dir) {
@@ -205,7 +201,7 @@ void placePip(int &x, int &y, char dir) {
 // param:   x - x-coordinate of animation epicenter
 //          y - y-coordinate of animation epicenter
 // return:  none
-void winAnim(int x, int y) {
+void winAnim(int y, int x) {
   // STUB
   // show win animation
 }
