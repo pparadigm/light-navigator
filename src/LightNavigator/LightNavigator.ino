@@ -4,8 +4,26 @@ LedControl lc=LedControl(12,11,10,1);
 const double TICK = 1000; // TICK is a number that the Arduino takes ~1 second to count up to
 
 // levels
+                          
+const int floorOff[8][8] = {{0,0,0,0,0,0,0,0},
+                          {0,0,0,0,0,0,0,0},
+                          {0,0,0,0,0,0,0,0},
+                          {0,0,0,0,0,0,0,0},
+                          {0,0,0,0,0,0,0,0},
+                          {0,0,0,0,0,0,0,0},
+                          {0,0,0,0,0,0,0,0},
+                          {0,0,0,0,0,0,0,0}};
+                          
+const int floorOn[8][8] = {{1,1,1,1,1,1,1,1},
+                          {1,1,1,1,1,1,1,1},
+                          {1,1,1,1,1,1,1,1},
+                          {1,1,1,1,1,1,1,1},
+                          {1,1,1,1,1,1,1,1},
+                          {1,1,1,1,1,1,1,1},
+                          {1,1,1,1,1,1,1,1},
+                          {1,1,1,1,1,1,1,1}};
 
-const int floor0[8][8] = {{1,1,1,1,1,1,1,1},
+const int floorRoom[8][8] = {{1,1,1,1,1,1,1,1},
                           {1,0,0,0,0,0,0,1},
                           {1,0,0,0,0,0,0,1},
                           {1,0,0,0,0,0,0,1},
@@ -23,12 +41,12 @@ const int floor1[8][8] = {{0,1,0,0,0,1,0,0},
                           {0,1,0,1,0,1,0,1},
                           {0,1,0,0,0,0,0,1}};
 
-const int NUM_LEVELS = 2;
+const int NUM_LEVELS = 3;
 typedef const int (*mapsPtr)[8];
-mapsPtr maps[NUM_LEVELS] = {floor0, floor1};
+mapsPtr maps[NUM_LEVELS] = {floorOff, floorOn, floorRoom/*, floor1*/};
 
 int startLevel = 1, curLevel, start[2] = {}, goal[2] = {}, pX, pY, count;
-bool changeLevel, pipState, goalState;
+bool changeLevel, pipState, goalState, collisionOn = false;
 char go;
 
 void setup() {
@@ -47,6 +65,9 @@ void loop() {
   while(true) {
     // load map
     if(changeLevel) {
+      if (curLevel >= NUM_LEVELS) {
+        curLevel = startLevel;
+      }
       displayMap(curLevel);
   
       // set initial level values
@@ -85,9 +106,11 @@ void loop() {
         }
 
         // if pip is at a wall, teleport back to start
-        if (maps[curLevel][pY][pX] == 1) {
-          pY = start[0];
-          pX = start[1];
+        if (collisionOn) {
+          if (maps[curLevel][pY][pX] == 1) {
+            pY = start[0];
+            pX = start[1];
+          }
         }
       }
     }
@@ -116,9 +139,21 @@ void displayMap(int level) {
 // param:   none
 // return:  N, W, S, E, or C
 char getDirection() {
-  // STUB
-  // talk to whatever: txt file or joystick
-  return 'C';
+  char dir;
+  char input[] = "S";
+  static int pos = 0;
+  //static int c = 0;
+  if (pos < sizeof(input)) {
+    dir = input[pos];
+  //  pos++;
+//  } else {
+//    dir = 'C';
+//    count++;
+//    if (count == 10) {
+//      pos = 0;
+//    }
+  }
+  return dir;
 }
 
 // purpose: "move" the pip on the board
@@ -129,8 +164,39 @@ char getDirection() {
 //          dir - a char that directs the movement of a pip
 // return:  none
 void placePip(int &x, int &y, char dir) {
-  // STUB
-  // using dir, change x or y
+  // turn off current location
+  lc.setLed(curLevel, x, y, maps[curLevel][x][y]);
+  
+  // pick new location
+  switch(dir) {
+    case 'N':
+      y--;
+      if (y < 0) {
+        y = 0;
+      }
+      break;
+    case 'W':
+      x--;
+      if (x < 0) {
+        x = 0;
+      }
+      break;
+    case 'S':
+      y++;
+      if (y > 7) {
+        y = 7;
+      }
+      break;
+    case 'E':
+      x++;
+      if (x > 7) {
+        x = 7;
+      }
+      break;
+    default:
+      // do nothin'
+      break;
+  }
 }
 
 // purpose: display an animation centered on the pip
