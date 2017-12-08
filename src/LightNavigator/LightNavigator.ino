@@ -1,4 +1,5 @@
 #include "LedControlMS.h"
+#include <arduino.h>
 
 LedControl lc=LedControl(12,11,10,1);
 const double TICK = 1000; // TICK is a number that the Arduino takes ~1 second to count up to
@@ -56,6 +57,13 @@ void setup() {
   lc.setIntensity(0,4);
   // clearDisplay
   lc.clearDisplay(0);
+
+  // setup switch pins
+  pinMode(6, INPUT);
+  pinMode(7, INPUT);
+  pinMode(8, INPUT);
+  pinMode(9, INPUT);
+  
 
   changeLevel = true;
   curLevel = startLevel;
@@ -205,4 +213,45 @@ void winAnim(int y, int x) {
   // STUB
   // show win animation
 }
+
+// purpose: get direction from switch
+// pre:     none
+// post:    none
+// param:   none
+// return:  N, W, S, E, or C
+char getSwitchDirection(){
+
+int value6, value7, value8, value9 = 0;
+char pipDirection;
+
+    value6 = digitalRead(6);
+    value7 = digitalRead(7);
+    value8 = digitalRead(8);
+    value9 = digitalRead(9); 
+
+    
+    if(value6 == HIGH){
+      lc.setLed(0, 0, 0, true);}
+    else{
+      lc.setLed(0, 0, 0, false);}
+      
+    if(value7 == HIGH){
+      lc.setLed(0, 0, 7, true);}
+    else{
+      lc.setLed(0, 0, 7, false);}
+      
+    if(value8 == HIGH){
+      lc.setLed(0, 7, 0, true);}
+    else{
+      lc.setLed(0, 7, 0, false);}
+      
+    if(value9 == HIGH){
+      lc.setLed(0, 7, 7, true);}
+    else{
+      lc.setLed(0, 7, 7, false);}
+
+      return pipDirection;
+}
+
+
 
