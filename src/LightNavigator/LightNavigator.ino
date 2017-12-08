@@ -19,6 +19,7 @@ mapsPtr maps[NUM_LEVELS] = {floor1};
 
 int curLevel = 0, start[2] = {}, goal[2] = {}, pX, pY, count;
 bool changeLevel, pipState, goalState;
+char go;
 
 void setup() {
   // wake up Arduino
@@ -40,6 +41,7 @@ void loop() {
       displayMap();
   
       // set initial level values
+      // eventually these positions could be random from a list, and would depend on the map
       start[0] = 0, start[1] = 0; // y, x
       goal[0] = 3, goal[1] = 7;   // y, x
       pX = start[1];
@@ -62,10 +64,13 @@ void loop() {
 
     // see if player moved and react
     if (count % 4) {
-      // not implemented
+      go = getDirection();
+      if (go != 'C') {
+        placePip(pX, pY, go);
+      }
     }
     
-    count = (count + 1) % 60; // 60 is arbitrary, with lots of factors
+    count = (count + 1) % 60; // 60 is an arbitrary # with lots of factors
   }
 }
 
@@ -75,11 +80,34 @@ void loop() {
 // param:   curLevel - the index of the map to display
 // return:  none
 void displayMap() {
-  for(int i = 0; i < 8; i++) {
-    for(int j = 0; j < 8; j++) {
-      bool state = maps[curLevel-1][i][j]; // probably curLevel should be passed in?
-      lc.setLed(0, i, j, state);
+  for(int y = 0; y < 8; y++) {
+    for(int x = 0; x < 8; x++) {
+      bool state = maps[curLevel-1][y][x]; // probably curLevel should be passed in?
+      lc.setLed(0, y, x, state);
     }
   }
+}
+
+// purpose: read input from a file
+// pre:     none
+// post:    none
+// param:   none
+// return:  N, W, S, E, or C
+char getDirection() {
+  // STUB
+  // talk to whatever: txt file or joystick
+  return 'C';
+}
+
+// purpose: "move" the pip on the board
+// pre:     non
+// post:    pip coordinates (x and y) are updated, invalid dir is ignored
+// param:   x - x-coordinate of pip
+//          y - y-coordinate of pip
+//          dir - a char that directs the movement of a pip
+// return:  none
+void placePip(int &x, int &y, char dir) {
+  // STUB
+  // using dir, change x or y
 }
 
