@@ -76,9 +76,18 @@ void loop() {
       go = getDirection();
       if (go != 'C') {
         placePip(pX, pY, go);
-        // if pip is at the goal
+        
+        // if pip is at the goal, win
         if (pX == goal[1] && pY == goal[0]) {
           winAnim(pX, pY);
+          curLevel++;
+          changeLevel = true;
+        }
+
+        // if pip is at a wall, teleport back to start
+        if (maps[curLevel][pY][pX] == 1) {
+          pY = start[0];
+          pX = start[1];
         }
       }
     }
