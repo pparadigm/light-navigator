@@ -4,6 +4,16 @@ LedControl lc=LedControl(12,11,10,1);
 const double TICK = 1000; // TICK is a number that the Arduino takes ~1 second to count up to
 
 // levels
+
+const int floor0[8][8] = {{1,1,1,1,1,1,1,1},
+                          {1,0,0,0,0,0,0,1},
+                          {1,0,0,0,0,0,0,1},
+                          {1,0,0,0,0,0,0,1},
+                          {1,0,0,0,0,0,0,1},
+                          {1,0,0,0,0,0,0,1},
+                          {1,0,0,0,0,0,0,1},
+                          {1,1,1,1,1,1,1,1}};
+
 const int floor1[8][8] = {{0,1,0,0,0,1,0,0},
                           {0,1,0,1,0,0,0,1},
                           {0,1,0,1,1,1,1,1},
@@ -13,9 +23,9 @@ const int floor1[8][8] = {{0,1,0,0,0,1,0,0},
                           {0,1,0,1,0,1,0,1},
                           {0,1,0,0,0,0,0,1}};
 
-const int NUM_LEVELS = 1;
+const int NUM_LEVELS = 2;
 typedef const int (*mapsPtr)[8];
-mapsPtr maps[NUM_LEVELS] = {floor1};
+mapsPtr maps[NUM_LEVELS] = {floor0, floor1};
 
 int curLevel = 0, start[2] = {}, goal[2] = {}, pX, pY, count;
 bool changeLevel, pipState, goalState;
@@ -30,7 +40,7 @@ void setup() {
   lc.clearDisplay(0);
 
   changeLevel = true;
-  
+  // curLevel = -1;
 }
 
 void loop() {
@@ -82,7 +92,7 @@ void loop() {
 void displayMap() {
   for(int y = 0; y < 8; y++) {
     for(int x = 0; x < 8; x++) {
-      bool state = maps[curLevel-1][y][x]; // probably curLevel should be passed in?
+      bool state = maps[curLevel][y][x]; // probably curLevel should be passed in?
       lc.setLed(0, y, x, state);
     }
   }
