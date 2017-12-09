@@ -48,7 +48,7 @@ const int floor1[8][8] = {
 
 const int NUM_LEVELS = 4;
 typedef const int (*mapsPtr)[8];
-mapsPtr maps[NUM_LEVELS] = {floorOff, floorOn, floorRoom, floor1};
+mapsPtr maps[NUM_LEVELS] = {floorOn, floorOff, floorRoom, floor1};
 
 int startLevel = 3, curLevel, start[2] = {}, goal[2] = {}, pX, pY, count;
 bool changeLevel, pipState, goalState, collisionOn = true;
@@ -92,7 +92,7 @@ void loop() {
       count = 0;
       pipState = false, goalState = false;
     }
-    delay(TICK/4);
+    delay(TICK/6);
   
     // blink player character
     if (count % 2 == 0) {
