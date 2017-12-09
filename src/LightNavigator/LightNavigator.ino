@@ -1,46 +1,50 @@
 #include "LedControlMS.h"
-#include <arduino.h>
+#include "arduino.h"
 
 LedControl lc=LedControl(12,11,10,1);
 const double TICK = 1000; // TICK is a number that the Arduino takes ~1 second to count up to
 
 // levels
+const int floorOff[8][8] = {
+  {0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0}};
                           
-const int floorOff[8][8] = {{0,0,0,0,0,0,0,0},
-                          {0,0,0,0,0,0,0,0},
-                          {0,0,0,0,0,0,0,0},
-                          {0,0,0,0,0,0,0,0},
-                          {0,0,0,0,0,0,0,0},
-                          {0,0,0,0,0,0,0,0},
-                          {0,0,0,0,0,0,0,0},
-                          {0,0,0,0,0,0,0,0}};
-                          
-const int floorOn[8][8] = {{1,1,1,1,1,1,1,1},
-                          {1,1,1,1,1,1,1,1},
-                          {1,1,1,1,1,1,1,1},
-                          {1,1,1,1,1,1,1,1},
-                          {1,1,1,1,1,1,1,1},
-                          {1,1,1,1,1,1,1,1},
-                          {1,1,1,1,1,1,1,1},
-                          {1,1,1,1,1,1,1,1}};
+const int floorOn[8][8] = {
+  {1,1,1,1,1,1,1,1},
+  {1,1,1,1,1,1,1,1},
+  {1,1,1,1,1,1,1,1},
+  {1,1,1,1,1,1,1,1},
+  {1,1,1,1,1,1,1,1},
+  {1,1,1,1,1,1,1,1},
+  {1,1,1,1,1,1,1,1},
+  {1,1,1,1,1,1,1,1}};
 
-const int floorRoom[8][8] = {{1,1,1,1,1,1,1,1},
-                          {1,0,0,0,0,0,0,1},
-                          {1,0,0,0,0,0,0,1},
-                          {1,0,0,0,0,0,0,1},
-                          {1,0,0,0,0,0,0,1},
-                          {1,0,0,0,0,0,0,1},
-                          {1,0,0,0,0,0,0,1},
-                          {1,1,1,1,1,1,1,1}};
+const int floorRoom[8][8] = {
+  {1,1,1,1,1,1,1,1},
+  {1,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,1},
+  {1,1,1,1,1,1,1,1}};
 
-const int floor1[8][8] = {{0,1,0,0,0,1,0,0},
-                          {0,1,0,1,0,0,0,1},
-                          {0,1,0,1,1,1,1,1},
-                          {0,0,0,1,0,0,1,0},
-                          {1,1,0,1,0,1,1,0},
-                          {0,0,0,1,0,1,0,0},
-                          {0,1,0,1,0,1,0,1},
-                          {0,1,0,0,0,0,0,1}};
+const int floor1[8][8] = {
+  {0,1,0,0,0,1,0,0},
+  {0,1,0,1,0,0,0,1},
+  {0,1,0,1,1,1,1,1},
+  {0,0,0,1,0,0,1,0},
+  {1,1,0,1,0,1,1,0},
+  {0,0,0,1,0,1,0,0},
+  {0,1,0,1,0,1,0,1},
+  {0,1,0,0,0,0,0,1}};
+
 
 const int NUM_LEVELS = 4;
 typedef const int (*mapsPtr)[8];
@@ -161,7 +165,7 @@ char getDirectionString() {
 }
 
 // purpose: "move" the pip on the board
-// pre:     non
+// pre:     none
 // post:    pip coordinates (x and y) are updated, invalid dir is ignored
 // param:   x - x-coordinate of pip
 //          y - y-coordinate of pip
@@ -173,30 +177,35 @@ void placePip(int &y, int &x, char dir) {
   
   // pick new location
   switch(dir) {
+    // go north
     case 'N':
       y--;
       if (y < 0) {
         y = 0;
       }
       break;
+    // go west
     case 'W':
       x--;
       if (x < 0) {
         x = 0;
       }
       break;
+    // go south
     case 'S':
       y++;
       if (y > 7) {
         y = 7;
       }
       break;
+    // go east
     case 'E':
       x++;
       if (x > 7) {
         x = 7;
       }
       break;
+    // stay
     default:
       // do nothin'
       break;
@@ -232,19 +241,16 @@ char getSwitchDirection() {
   // make direction usable
   if(value6 == LOW) {
     pipDirection = 'N';
-  }
-  else if(value7 == LOW) {
+  } else if(value7 == LOW) {
     pipDirection = 'W';
-  }
-  else if(value8 == LOW) {
+  } else if(value8 == LOW) {
     pipDirection = 'E';
-  }
-  else if(value9 == LOW) {
+  } else if(value9 == LOW) {
     pipDirection = 'S';
-  }
-  else {
+  } else {
     pipDirection = 'C';
   }
+  
   return pipDirection;
 }
 
