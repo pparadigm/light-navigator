@@ -221,13 +221,13 @@ char getDirection() {
   
   // make direction usable
   if(value6 == LOW) {
-    pipDirection = 'N';
-  } else if(value7 == LOW) {
-    pipDirection = 'W';
-  } else if(value8 == LOW) {
-    pipDirection = 'E';
-  } else if(value9 == LOW) {
     pipDirection = 'S';
+  } else if(value7 == LOW) {
+    pipDirection = 'E';
+  } else if(value8 == LOW) {
+    pipDirection = 'W';
+  } else if(value9 == LOW) {
+    pipDirection = 'N';
   } else {
     pipDirection = 'C';
   }
