@@ -58,13 +58,13 @@ void setup() {
   // clearDisplay
   lc.clearDisplay(0);
 
-  // setup switch pins
+  // set up switch pins
   pinMode(6, INPUT);
   pinMode(7, INPUT);
   pinMode(8, INPUT);
   pinMode(9, INPUT);
   
-
+  // set up game
   changeLevel = true;
   curLevel = startLevel;
 }
@@ -100,7 +100,7 @@ void loop() {
     goalState = !goalState;
     lc.setLed(0, goal[0], goal[1], goalState);
 
-    // see if player moved and react
+    // see if pip moved and react
     if (count % 5 == 0) {
       go = getSwitchDirection();
       if (go != 'C') {
@@ -219,27 +219,32 @@ void winAnim(int y, int x) {
 // post:    none
 // param:   none
 // return:  N, W, S, E, or C
-char getSwitchDirection(){
+char getSwitchDirection() {
+  int value6, value7, value8, value9 = 0;
+  char pipDirection;
 
-int value6, value7, value8, value9 = 0;
-char pipDirection;
-
-    value6 = digitalRead(6);
-    value7 = digitalRead(7);
-    value8 = digitalRead(8);
-    value9 = digitalRead(9); 
-
-    
-    if(value6 == LOW){
-      pipDirection = 'N';}
-    else if(value7 == LOW){
-  pipDirection = 'W';}
-    else if(value8 == LOW){
-  pipDirection = 'E';}
-    else if(value9 == LOW){
-  pipDirection = 'S';}
-    else
-  pipDirection = 'C';
-      return pipDirection;
+  // check pins for direction
+  value6 = digitalRead(6);
+  value7 = digitalRead(7);
+  value8 = digitalRead(8);
+  value9 = digitalRead(9); 
+  
+  // make direction usable
+  if(value6 == LOW) {
+    pipDirection = 'N';
+  }
+  else if(value7 == LOW) {
+    pipDirection = 'W';
+  }
+  else if(value8 == LOW) {
+    pipDirection = 'E';
+  }
+  else if(value9 == LOW) {
+    pipDirection = 'S';
+  }
+  else {
+    pipDirection = 'C';
+  }
+  return pipDirection;
 }
 
