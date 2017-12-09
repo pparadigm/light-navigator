@@ -106,7 +106,7 @@ void loop() {
 
     // see if pip moved and react
     if (count % 5 == 0) {
-      go = getSwitchDirection();
+      go = getDirection();
       if (go != 'C') {
         placePip(pY, pX, go);
         
@@ -143,25 +143,6 @@ void displayMap(int level) {
       lc.setLed(0, y, x, state);
     }
   }
-}
-
-// purpose: read input from a file
-// pre:     none
-// post:    none
-// param:   none
-// return:  N, W, S, E, or C
-char getDirectionString() {
-  char dir;
-  char input[] = "SSSSSSSEEEENNNNNNNEEESSS";
-  static int pos = 0;
-  //static int c = 0;
-  if (pos < sizeof(input)) {
-    dir = input[pos];
-    pos++;
-  } else {
-    dir = 'C';
-  }
-  return dir;
 }
 
 // purpose: "move" the pip on the board
@@ -228,7 +209,7 @@ void winAnim(int y, int x) {
 // post:    none
 // param:   none
 // return:  N, W, S, E, or C
-char getSwitchDirection() {
+char getDirection() {
   int value6, value7, value8, value9 = 0;
   char pipDirection;
 
