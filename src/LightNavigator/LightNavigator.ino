@@ -48,9 +48,9 @@ const int floor1[8][8] = {
 
 const int NUM_LEVELS = 4;
 typedef const int (*mapsPtr)[8];
-mapsPtr maps[NUM_LEVELS] = {floorOn, floorOff, floorRoom, floor1};
+mapsPtr maps[NUM_LEVELS] = {floorOn, floorRoom, floorOff, floor1};
 
-int startLevel = 3, curLevel, start[2] = {}, goal[2] = {}, pX, pY, count;
+int startLevel = 2, curLevel, start[2] = {}, goal[2] = {}, pX, pY, count;
 bool changeLevel, pipState, goalState, collisionOn = true;
 char go;
 
